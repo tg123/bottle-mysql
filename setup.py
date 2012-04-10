@@ -30,7 +30,7 @@ setup(
         'bottle_mysql'
     ],
     requires = [
-        'bottle (>=0.9)'
+        'bottle (>=0.10)'
     ],
     classifiers = [
         'Environment :: Web Environment',

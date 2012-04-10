@@ -13,7 +13,7 @@ Description:
     connection afterwards.
     
     To automatically detect routes that need a database connection, the plugin
-    searches for route callbacks that require a `mdb` keyword argument
+    searches for route callbacks that require a `db` keyword argument
     (configurable) and skips routes that do not. This removes any overhead for
     routes that don't need a database connection.
     
@@ -25,13 +25,14 @@ Description:
         import bottle_mysql
     
         app = bottle.Bottle()
-        plugin = bottle_mysql.Plugin(dbhost='localhost', dbuser='user', dbpass='pass', dbname='db')
+        # dbhost is optional, default is localhost
+        plugin = bottle_mysql.Plugin(dbuser='user', dbpass='pass', dbname='db')
         app.install(plugin)
     
-        @app.route('/show/:item')
-        def show(item, mdb):
-            mdb.execute('SELECT * from items where name="%s"', (item))
-            row = mdb.fetchone()
+        @app.route('/show/<item>')
+        def show(item, db):
+            db.execute('SELECT * from items where name="%s"', (item,))
+            row = db.fetchone()
             if row:
                 return template('showitem', page=row)
             return HTTPError(404, "Page not found")
@@ -44,4 +45,4 @@ Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
-Requires: bottle (>=0.9)
+Requires: bottle (>=0.10)

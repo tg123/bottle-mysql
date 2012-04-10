@@ -5,7 +5,7 @@ request, passes the database handle to the route callback and closes the
 connection afterwards.
 
 To automatically detect routes that need a database connection, the plugin
-searches for route callbacks that require a `mdb` keyword argument
+searches for route callbacks that require a `db` keyword argument
 (configurable) and skips routes that do not. This removes any overhead for
 routes that don't need a database connection.
 
@@ -17,20 +17,21 @@ Usage Example::
     import bottle_mysql
 
     app = bottle.Bottle()
-    plugin = bottle_mysql.Plugin(dbhost='localhost', dbuser='user', dbpass='pass', dbname='db')
+    # dbhost is optional, default is localhost
+    plugin = bottle_mysql.Plugin(dbuser='user', dbpass='pass', dbname='db')
     app.install(plugin)
 
-    @app.route('/show/:item')
-    def show(item, mdb):
-        mdb.execute('SELECT * from items where name="%s"', (item))
-        row = mdb.fetchone()
+    @app.route('/show/:<tem>')
+    def show(item, db):
+        db.execute('SELECT * from items where name="%s"', (item,))
+        row = db.fetchone()
         if row:
             return template('showitem', page=row)
         return HTTPError(404, "Page not found")
 '''
 
 __author__ = "Michael Lustfield"
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __license__ = 'MIT'
 
 ### CUT HERE (see setup.py)
@@ -51,7 +52,7 @@ class MySQLPlugin(object):
 
     name = 'mysql'
 
-    def __init__(self, dbhost=None, dbuser=None, dbpass=None, dbname=None, autocommit=True, dictrows=True, keyword='mdb'):
+    def __init__(self, dbuser=None, dbpass=None, dbname=None, dbhost='localhost', autocommit=True, dictrows=True, keyword='db'):
          self.dbhost = dbhost
          self.dbuser = dbuser
          self.dbpass = dbpass

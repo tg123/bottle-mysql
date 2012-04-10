@@ -6,7 +6,7 @@ MySQL is the world's most used relational database management system (RDBMS) tha
 as a server providing multi-user access to a number of databases.
 
 This plugin simplifies the use of mysql databases in your Bottle applications. 
-Once installed, all you have to do is to add an ``mdb`` keyword argument 
+Once installed, all you have to do is to add an ``db`` keyword argument 
 (configurable) to route callbacks that need a database connection.
 
 Installation
@@ -27,25 +27,26 @@ Usage
 ===============
 
 Once installed to an application, the plugin passes an open 
-:class:`MySQLdb.connect().cursor()` instance to all routes that requires an ``mdb`` keyword 
+:class:`MySQLdb.connect().cursor()` instance to all routes that requires an ``db`` keyword 
 argument::
 
     import bottle
     import bottle_mysql
 
     app = bottle.Bottle()
-    plugin = bottle_mysql.Plugin(dbhost='localhost', dbuser='user', dbpass='pass', dbname='some_db')
+    # dbhost is optional, default is localhost
+    plugin = bottle_mysql.Plugin(dbuser='user', dbpass='pass', dbname='some_db')
     app.install(plugin)
 
     @app.route('/show/:item')
-    def show(item, mdb):
-        mdb.execute('SELECT * from items where name="%s"', (item,))
-        row = mdb.fetchone()
+    def show(item, db):
+        db.execute('SELECT * from items where name="%s"', (item,))
+        row = db.fetchone()
         if row:
             return template('showitem', page=row)
         return HTTPError(404, "Page not found")
 
-Routes that do not expect an ``mdb`` keyword argument are not affected.
+Routes that do not expect an ``db`` keyword argument are not affected.
 
 The connection handle is configurable so that rows can be returned as either an
 index (like tuples) or as dictionaries. At the end of the request cycle, outstanding
@@ -58,29 +59,32 @@ Configuration
 
 The following configuration options exist for the plugin class:
 
-* **dbfile**: Database filename (default: in-memory database).
-* **keyword**: The keyword argument name that triggers the plugin (default: 'mdb').
+* **dbuser**: Username that will be used to connect to the database (default: None).
+* **dbpass**: Password that will be used to connect to the database (default: None).
+* **dbname**: Database name that will be connected to (default: None).
+* **dbhost**: Databse server host (default: 'localhost').
+* **keyword**: The keyword argument name that triggers the plugin (default: 'db').
 * **autocommit**: Whether or not to commit outstanding transactions at the end of the request cycle (default: True).
 * **dictrows**: Whether or not to support dict-like access to row objects (default: True).
 
 You can override each of these values on a per-route basis:: 
 
     @app.route('/cache/:item', mysql={'dbname': 'xyz_db'})
-    def cache(item, mdb):
+    def cache(item, db):
         ...
    
 or install two plugins with different ``keyword`` settings to the same application::
 
     app = bottle.Bottle()
-    test_db = bottle_mysql.Plugin(dbhost='localhost', dbuser='user', dbpass='pass', dbname='some_db')
-    cache_db = bottle_mysql.Plugin(dbhost='localhost', dbuser='user', dbpass='pass', dbname='another_db', keyword='db2')
-    app.install(test_db)
-    app.install(cache_db)
+    local_db = bottle_mysql.Plugin(dbuser='user', dbpass='pass', dbname='local_db')
+    prod_db = bottle_mysql.Plugin(dbuser='user', dbpass='pass', dbname='some_db', dbhost='sql.domain.tld', keyword='remote_db')
+    app.install(local_db)
+    app.install(prod_db)
 
-    @app.route('/show/:item')
-    def show(item, mdb):
+    @app.route('/show/<item>')
+    def show(item, db):
         ...
 
-    @app.route('/cache/:item')
-    def cache(item, db2):
+    @app.route('/cache/<item>')
+    def cache(item, remote_db):
         ...
