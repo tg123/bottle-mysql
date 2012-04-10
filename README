@@ -38,7 +38,7 @@ argument::
     plugin = bottle_mysql.Plugin(dbuser='user', dbpass='pass', dbname='some_db')
     app.install(plugin)
 
-    @app.route('/show/:item')
+    @app.route('/show/<item>')
     def show(item, db):
         db.execute('SELECT * from items where name="%s"', (item,))
         row = db.fetchone()
@@ -69,7 +69,7 @@ The following configuration options exist for the plugin class:
 
 You can override each of these values on a per-route basis:: 
 
-    @app.route('/cache/:item', mysql={'dbname': 'xyz_db'})
+    @app.route('/cache/<item>', mysql={'dbname': 'xyz_db'})
     def cache(item, db):
         ...
    
