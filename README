@@ -1,0 +1,86 @@
+=====================
+Bottle-MySQL
+=====================
+
+MySQL is the world's most used relational database management system (RDBMS) that runs
+as a server providing multi-user access to a number of databases.
+
+This plugin simplifies the use of mysql databases in your Bottle applications. 
+Once installed, all you have to do is to add an ``mdb`` keyword argument 
+(configurable) to route callbacks that need a database connection.
+
+Installation
+===============
+
+Install with one of the following commands::
+
+    $ pip install bottle-mysql
+    $ easy_install bottle-mysql
+
+or download the latest version from github::
+
+    $ git clone git://github.com/MTecknology/bottle-mysql.git
+    $ cd bottle-mysql
+    $ python setup.py install
+
+Usage
+===============
+
+Once installed to an application, the plugin passes an open 
+:class:`MySQLdb.connect().cursor()` instance to all routes that requires an ``mdb`` keyword 
+argument::
+
+    import bottle
+    import bottle_mysql
+
+    app = bottle.Bottle()
+    plugin = bottle_mysql.Plugin(dbhost='localhost', dbuser='user', dbpass='pass', dbname='some_db')
+    app.install(plugin)
+
+    @app.route('/show/:item')
+    def show(item, mdb):
+        mdb.execute('SELECT * from items where name="%s"', (item,))
+        row = mdb.fetchone()
+        if row:
+            return template('showitem', page=row)
+        return HTTPError(404, "Page not found")
+
+Routes that do not expect an ``mdb`` keyword argument are not affected.
+
+The connection handle is configurable so that rows can be returned as either an
+index (like tuples) or as dictionaries. At the end of the request cycle, outstanding
+transactions are committed and the connection is closed automatically. If an error
+occurs, any changes to the database since the last commit are rolled back to keep
+the database in a consistent state.
+
+Configuration
+=============
+
+The following configuration options exist for the plugin class:
+
+* **dbfile**: Database filename (default: in-memory database).
+* **keyword**: The keyword argument name that triggers the plugin (default: 'mdb').
+* **autocommit**: Whether or not to commit outstanding transactions at the end of the request cycle (default: True).
+* **dictrows**: Whether or not to support dict-like access to row objects (default: True).
+
+You can override each of these values on a per-route basis:: 
+
+    @app.route('/cache/:item', mysql={'dbname': 'xyz_db'})
+    def cache(item, mdb):
+        ...
+   
+or install two plugins with different ``keyword`` settings to the same application::
+
+    app = bottle.Bottle()
+    test_db = bottle_mysql.Plugin(dbhost='localhost', dbuser='user', dbpass='pass', dbname='some_db')
+    cache_db = bottle_mysql.Plugin(dbhost='localhost', dbuser='user', dbpass='pass', dbname='another_db', keyword='db2')
+    app.install(test_db)
+    app.install(cache_db)
+
+    @app.route('/show/:item')
+    def show(item, mdb):
+        ...
+
+    @app.route('/cache/:item')
+    def cache(item, db2):
+        ...
