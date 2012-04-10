@@ -12,12 +12,11 @@ Once installed, all you have to do is to add an ``db`` keyword argument
 Installation
 ===============
 
-Install with one of the following commands::
+Install using pip:
 
     $ pip install bottle-mysql
-    $ easy_install bottle-mysql
 
-or download the latest version from github::
+or download the latest version from github:
 
     $ git clone git://github.com/MTecknology/bottle-mysql.git
     $ cd bottle-mysql
@@ -28,7 +27,7 @@ Usage
 
 Once installed to an application, the plugin passes an open 
 :class:`MySQLdb.connect().cursor()` instance to all routes that requires an ``db`` keyword 
-argument::
+argument:
 
     import bottle
     import bottle_mysql
@@ -67,13 +66,13 @@ The following configuration options exist for the plugin class:
 * **autocommit**: Whether or not to commit outstanding transactions at the end of the request cycle (default: True).
 * **dictrows**: Whether or not to support dict-like access to row objects (default: True).
 
-You can override each of these values on a per-route basis:: 
+You can override each of these values on a per-route basis: 
 
     @app.route('/cache/<item>', mysql={'dbname': 'xyz_db'})
     def cache(item, db):
         ...
    
-or install two plugins with different ``keyword`` settings to the same application::
+or install two plugins with different ``keyword`` settings to the same application:
 
     app = bottle.Bottle()
     local_db = bottle_mysql.Plugin(dbuser='user', dbpass='pass', dbname='local_db')
