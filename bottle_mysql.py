@@ -31,7 +31,7 @@ Usage Example::
 '''
 
 __author__ = "Michael Lustfield"
-__version__ = '0.1.2'
+__version__ = '0.1.4'
 __license__ = 'MIT'
 
 ### CUT HERE (see setup.py)
@@ -52,15 +52,17 @@ class MySQLPlugin(object):
 
     name = 'mysql'
 
-    def __init__(self, dbuser=None, dbpass=None, dbname=None, dbhost='localhost', dbport=3306, autocommit=True, dictrows=True, keyword='db'):
-         self.dbhost = dbhost
-	 self.dbport = dbport
-         self.dbuser = dbuser
-         self.dbpass = dbpass
-         self.dbname = dbname
-         self.autocommit = autocommit
-         self.dictrows = dictrows
-         self.keyword = keyword
+    def __init__(self, dbuser=None, dbpass=None, dbname=None, dbhost='localhost', dbport=3306, autocommit=True, dictrows=True, keyword='db', charset='utf8', timezone=None):
+        self.dbhost = dbhost
+        self.dbport = dbport
+        self.dbuser = dbuser
+        self.dbpass = dbpass
+        self.dbname = dbname
+        self.autocommit = autocommit
+        self.dictrows = dictrows
+        self.keyword = keyword
+        self.charset = charset
+        self.timezone = timezone
 
     def setup(self, app):
         '''
@@ -83,6 +85,8 @@ class MySQLPlugin(object):
         autocommit = conf.get('autocommit', self.autocommit)
         dictrows = conf.get('dictrows', self.dictrows)
         keyword = conf.get('keyword', self.keyword)
+        charset = conf.get('charset', self.charset)
+        timezone = conf.get('timezone', self.timezone)
 
         # Test if the original callback accepts a 'db' keyword.
         # Ignore it if it does not need a database handle.
@@ -96,10 +100,12 @@ class MySQLPlugin(object):
             try:
                 # Using DictCursor lets us return result as a dictionary instead of the default list
                 if dictrows:
-                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, cursorclass=cursors.DictCursor);
+                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, cursorclass=cursors.DictCursor, charset=charset, use_unicode=True);
                 else:
-                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport);
+                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, charset=charset);
                 cur = con.cursor()
+                if timezone:
+                    cur.execute("set time_zone=%s", (timezone, ));
             except HTTPResponse, e:
                 raise HTTPError(500, "Database Error", e)
 
