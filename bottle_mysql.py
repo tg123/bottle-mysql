@@ -31,7 +31,7 @@ Usage Example::
 '''
 
 __author__ = "Michael Lustfield"
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __license__ = 'MIT'
 
 ### CUT HERE (see setup.py)
@@ -52,8 +52,9 @@ class MySQLPlugin(object):
 
     name = 'mysql'
 
-    def __init__(self, dbuser=None, dbpass=None, dbname=None, dbhost='localhost', autocommit=True, dictrows=True, keyword='db'):
+    def __init__(self, dbuser=None, dbpass=None, dbname=None, dbhost='localhost', dbport=3306, autocommit=True, dictrows=True, keyword='db'):
          self.dbhost = dbhost
+	 self.dbport = dbport
          self.dbuser = dbuser
          self.dbpass = dbpass
          self.dbname = dbname
@@ -75,6 +76,7 @@ class MySQLPlugin(object):
         # Override global configuration with route-specific values.
         conf = context['config'].get('mysql') or {}
         dbhost = conf.get('dbhost', self.dbhost)
+        dbport = conf.get('dbport', self.dbport)
         dbuser = conf.get('dbuser', self.dbuser)
         dbpass = conf.get('dbpass', self.dbpass)
         dbname = conf.get('dbname', self.dbname)
@@ -94,9 +96,9 @@ class MySQLPlugin(object):
             try:
                 # Using DictCursor lets us return result as a dictionary instead of the default list
                 if dictrows:
-                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, cursorclass=cursors.DictCursor);
+                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, cursorclass=cursors.DictCursor);
                 else:
-                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname);
+                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport);
                 cur = con.cursor()
             except HTTPResponse, e:
                 raise HTTPError(500, "Database Error", e)
