@@ -9,7 +9,7 @@ Once installed, all you have to do is to add an ``db`` keyword argument
 (configurable) to route callbacks that need a database connection.
 
 
-`Bottle-MySQL` is written by Michael Lustfield (MTecknology)[https://github.com/MTecknology]
+`Bottle-MySQL` is written by Michael Lustfield [MTecknology](https://github.com/MTecknology)
 and now is maintained by Boshi Lian (tgic).
 
 
