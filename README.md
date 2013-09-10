@@ -1,6 +1,5 @@
-=====================
 Bottle-MySQL
-=====================
+============
 
 MySQL is the world's most used relational database management system (RDBMS) that runs
 as a server providing multi-user access to a number of databases.
@@ -9,8 +8,13 @@ This plugin simplifies the use of mysql databases in your Bottle applications.
 Once installed, all you have to do is to add an ``db`` keyword argument 
 (configurable) to route callbacks that need a database connection.
 
+
+`Bottle-MySQL` is written by Michael Lustfield (MTecknology)[https://github.com/MTecknology]
+and now is maintained by Boshi Lian (tgic).
+
+
 Installation
-===============
+------------
 
 Install using pip:
 
@@ -18,12 +22,12 @@ Install using pip:
 
 or download the latest version from github:
 
-    $ git clone git://github.com/MTecknology/bottle-mysql.git
+    $ git clone git://github.com/tg123/bottle-mysql.git
     $ cd bottle-mysql
     $ python setup.py install
 
 Usage
-===============
+-----
 
 Once installed to an application, the plugin passes an open 
 :class:`MySQLdb.connect().cursor()` instance to all routes that requires an ``db`` keyword 
@@ -54,7 +58,7 @@ occurs, any changes to the database since the last commit are rolled back to kee
 the database in a consistent state.
 
 Configuration
-=============
+-------------
 
 The following configuration options exist for the plugin class:
 
@@ -62,6 +66,7 @@ The following configuration options exist for the plugin class:
 * **dbpass**: Password that will be used to connect to the database (default: None).
 * **dbname**: Database name that will be connected to (default: None).
 * **dbhost**: Databse server host (default: 'localhost').
+* **dbport**: Databse server port (default: 3306).
 * **keyword**: The keyword argument name that triggers the plugin (default: 'db').
 * **autocommit**: Whether or not to commit outstanding transactions at the end of the request cycle (default: True).
 * **dictrows**: Whether or not to support dict-like access to row objects (default: True).

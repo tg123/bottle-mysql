@@ -19,7 +19,7 @@ exec(source)
 setup(
     name = 'bottle-mysql',
     version = __version__,
-    url = 'https://github.com/MTecknology/bottle-mysql',
+    url = 'https://github.com/tg123/bottle-mysql',
     description = 'MySQL integration for Bottle.',
     long_description = __doc__,
     author = 'Michael Lustfield',
