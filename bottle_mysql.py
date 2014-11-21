@@ -145,9 +145,9 @@ class MySQLPlugin(object):
             except MySQLdb.IntegrityError, e:
                 con.rollback()
                 raise bottle.HTTPError(500, "Database Error", e)
-            except bottle.HTTPError as e:
+            except bottle.HTTPError, e:
                 raise
-            except bottle.HTTPResponse as e:
+            except bottle.HTTPResponse, e:
                 if autocommit:
                     con.commit()
                 raise
