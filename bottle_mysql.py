@@ -1,4 +1,4 @@
-"""
+'''
 Bottle-MySQL is a plugin that integrates MySQL with your Bottle
 application. It automatically connects to a database at the beginning of a
 request, passes the database handle to the route callback and closes the
@@ -28,7 +28,7 @@ Usage Example::
         if row:
             return template('showitem', page=row)
         return HTTPError(404, "Page not found")
-"""
+'''
 
 __author__ = "Michael Lustfield"
 __version__ = '0.2.0'
@@ -51,12 +51,12 @@ if not hasattr(bottle, 'PluginError'):
 
 
 class MySQLPlugin(object):
-    """
+    '''
     This plugin passes a mysql database handle to route callbacks
     that accept a `db` keyword argument. If a callback does not expect
     such a parameter, no connection is made. You can override the database
     settings on a per-route basis.
-    """
+    '''
 
     name = 'mysql'
     api = 2
@@ -75,9 +75,9 @@ class MySQLPlugin(object):
         self.timezone = timezone
 
     def setup(self, app):
-        """
+        '''
         Make sure that other installed plugins don't affect the same keyword argument.
-        """
+        '''
         for other in app.plugins:
             if not isinstance(other, MySQLPlugin):
                 continue
