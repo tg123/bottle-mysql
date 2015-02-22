@@ -61,10 +61,11 @@ class MySQLPlugin(object):
     name = 'mysql'
     api = 2
 
-    def __init__(self, dbuser=None, dbpass=None, dbname=None, dbhost='localhost', dbport=3306, autocommit=True,
-                 dictrows=True, keyword='db', charset='utf8', timezone=None):
+    def __init__(self, dbuser=None, dbpass=None, dbname=None, dbhost='localhost', dbport=3306, dbunixsocket=None,
+                 autocommit=True, dictrows=True, keyword='db', charset='utf8', timezone=None):
         self.dbhost = dbhost
         self.dbport = dbport
+        self.dbunixsocket = dbunixsocket
         self.dbuser = dbuser
         self.dbpass = dbpass
         self.dbname = dbname
@@ -104,6 +105,7 @@ class MySQLPlugin(object):
 
         dbhost = g('dbhost', self.dbhost)
         dbport = g('dbport', self.dbport)
+        dbunixsocket = g('dbunixsocket', self.dbunixsocket)
         dbuser = g('dbuser', self.dbuser)
         dbpass = g('dbpass', self.dbpass)
         dbname = g('dbname', self.dbname)
@@ -126,9 +128,10 @@ class MySQLPlugin(object):
                 # Using DictCursor lets us return result as a dictionary instead of the default list
                 if dictrows:
                     con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, cursorclass=cursors.DictCursor,
-                                          charset=charset, use_unicode=True)
+                                          charset=charset, use_unicode=True, unix_socket=dbunixsocket)
                 else:
-                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, charset=charset)
+                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, charset=charset, 
+                                          unix_socket=dbunixsocket)
                 cur = con.cursor()
                 if timezone:
                     cur.execute("set time_zone=%s", (timezone, ))
