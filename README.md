@@ -67,6 +67,7 @@ The following configuration options exist for the plugin class:
 * **dbname**: Database name that will be connected to (default: None).
 * **dbhost**: Databse server host (default: 'localhost').
 * **dbport**: Databse server port (default: 3306).
+* **dbunixsocket**: Optionally, you can use a unix socket rather than TCP/IP.
 * **keyword**: The keyword argument name that triggers the plugin (default: 'db').
 * **autocommit**: Whether or not to commit outstanding transactions at the end of the request cycle (default: True).
 * **dictrows**: Whether or not to support dict-like access to row objects (default: True).
