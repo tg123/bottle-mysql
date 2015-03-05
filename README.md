@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tg123/bottle-mysql.svg?branch=master)](https://travis-ci.org/tg123/bottle-mysql)
+
 Bottle-MySQL
 ============
 
