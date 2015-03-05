@@ -31,7 +31,7 @@ Usage Example::
 '''
 
 __author__ = "Michael Lustfield"
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 __license__ = 'MIT'
 
 ### CUT HERE (see setup.py)
@@ -125,17 +125,30 @@ class MySQLPlugin(object):
             # Connect to the database
             con = None
             try:
-                # Using DictCursor lets us return result as a dictionary instead of the default list
+
+                kw = {
+                    'user': dbuser,
+                    'passwd': dbpass,
+                    'db': dbname,
+                    'charset': charset,
+                }
+
                 if dictrows:
-                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, cursorclass=cursors.DictCursor,
-                                          charset=charset, use_unicode=True, unix_socket=dbunixsocket)
+                    kw['cursorclass'] = cursors.DictCursor
+
+                if dbunixsocket:
+                    kw['unix_socket'] = dbunixsocket
                 else:
-                    con = MySQLdb.connect(dbhost, dbuser, dbpass, dbname, dbport, charset=charset, 
-                                          unix_socket=dbunixsocket)
+                    kw['host'] = dbhost
+                    kw['port'] = dbport
+
+                con = MySQLdb.connect(**kw)
+
                 cur = con.cursor()
                 if timezone:
                     cur.execute("set time_zone=%s", (timezone, ))
-            except bottle.HTTPResponse, e:
+
+            except bottle.HTTPResponse as e:
                 raise bottle.HTTPError(500, "Database Error", e)
 
             # Add the connection handle as a keyword argument.
@@ -145,12 +158,12 @@ class MySQLPlugin(object):
                 rv = callback(*args, **kwargs)
                 if autocommit:
                     con.commit()
-            except MySQLdb.IntegrityError, e:
+            except MySQLdb.IntegrityError as e:
                 con.rollback()
                 raise bottle.HTTPError(500, "Database Error", e)
-            except bottle.HTTPError, e:
+            except bottle.HTTPError:
                 raise
-            except bottle.HTTPResponse, e:
+            except bottle.HTTPResponse:
                 if autocommit:
                     con.commit()
                 raise
