@@ -1,2 +1,2 @@
-bottle
-MySQL-python
+bottle (>=0.10)
+MySQL_python

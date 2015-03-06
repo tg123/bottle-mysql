@@ -29,9 +29,7 @@ setup(
     py_modules = [
         'bottle_mysql'
     ],
-    requires = [
-        'bottle (>=0.10)'
-    ],
+    requires = [i.strip() for i in open("requirements.txt").readlines()],
     classifiers = [
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
