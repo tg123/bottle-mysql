@@ -116,12 +116,12 @@ class BottleMySQLTest(unittest.TestCase):
 
             # insert
             rows = db.execute(''' INSERT INTO `bottle_mysql_test` VALUE (NULL, %s) ''', (data,))
-            self.assertGreater(rows, 0)
+            self.assertEqual(rows, 1)
 
             db.execute(''' SELECT last_insert_id() as ID ''')
 
             data_id = db.fetchone()['ID']
-            self.assertGreater(data_id, 0)
+            self.assertTrue(data_id > 0)
 
             # select
             db.execute(''' SELECT * FROM `bottle_mysql_test` WHERE `id` = %s''', (data_id, ))
@@ -130,14 +130,14 @@ class BottleMySQLTest(unittest.TestCase):
             # update
             data = 'new'
             rows = db.execute(''' UPDATE `bottle_mysql_test` SET `text` = %s WHERE `id` = %s''', (data, data_id, ))
-            self.assertGreater(rows, 0)
+            self.assertEqual(rows, 1)
 
             db.execute(''' SELECT * FROM `bottle_mysql_test` WHERE `id` = %s''', (data_id, ))
             self.assertEqual({'id': data_id, 'text': data, }, db.fetchone())
 
             # delete
             rows = db.execute(''' DELETE FROM `bottle_mysql_test` WHERE `id` = %s''', (data_id, ))
-            self.assertGreater(rows, 0)
+            self.assertEqual(rows, 1)
 
         self._run(crud)
 
