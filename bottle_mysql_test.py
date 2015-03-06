@@ -12,6 +12,7 @@ class BottleMySQLTest(unittest.TestCase):
     PASS = ''
     DBNAME = 'bottle_mysql_test'
     SOCKET = '/var/run/mysqld/mysqld.sock'
+    DBHOST = '127.0.0.1'
 
     # copy from https://github.com/bottlepy/bottle-sqlite
     def test_with_keyword(self):
