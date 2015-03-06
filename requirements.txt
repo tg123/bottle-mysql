@@ -1,2 +1,2 @@
-bottle (>=0.10)
+bottle
 MySQL_python
