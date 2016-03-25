@@ -1,2 +1,2 @@
 bottle
-MySQL_python
+mysqlclient
