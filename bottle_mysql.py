@@ -31,7 +31,7 @@ Usage Example::
 '''
 
 __author__ = "Michael Lustfield"
-__version__ = '0.2.2'
+__version__ = '0.3.0'
 __license__ = 'MIT'
 
 ### CUT HERE (see setup.py)
