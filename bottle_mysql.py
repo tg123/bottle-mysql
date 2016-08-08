@@ -62,7 +62,7 @@ class MySQLPlugin(object):
     api = 2
 
     def __init__(self, dbuser=None, dbpass=None, dbname=None, dbhost='localhost', dbport=3306, dbunixsocket=None,
-                 autocommit=True, dictrows=True, keyword='db', charset='utf8', timezone=None):
+                 autocommit=True, dictrows=True, keyword='db', charset='utf8', timezone=None, conv=None):
         self.dbhost = dbhost
         self.dbport = dbport
         self.dbunixsocket = dbunixsocket
@@ -74,6 +74,7 @@ class MySQLPlugin(object):
         self.keyword = keyword
         self.charset = charset
         self.timezone = timezone
+        self.conv = conv
 
     def setup(self, app):
         '''
@@ -114,6 +115,7 @@ class MySQLPlugin(object):
         keyword = g('keyword', self.keyword)
         charset = g('charset', self.charset)
         timezone = g('timezone', self.timezone)
+        conv = g('conv', self.conv)
 
         # Test if the original callback accepts a 'db' keyword.
         # Ignore it if it does not need a database handle.
@@ -135,6 +137,9 @@ class MySQLPlugin(object):
 
                 if dictrows:
                     kw['cursorclass'] = cursors.DictCursor
+
+                if conv:
+                    kw['conv'] = conv
 
                 if dbunixsocket:
                     kw['unix_socket'] = dbunixsocket
