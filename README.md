@@ -1,8 +1,8 @@
 Bottle-MySQL
 ============
 [![Build Status](https://travis-ci.org/tg123/bottle-mysql.svg?branch=master)](https://travis-ci.org/tg123/bottle-mysql)
-[![Latest Version](https://pypip.in/version/bottle-mysql/badge.svg)](https://pypi.python.org/pypi/bottle-mysql/)
-[![Downloads](https://pypip.in/download/bottle-mysql/badge.svg)](https://pypi.python.org/pypi/bottle-mysql/)
+[![Latest Version](https://img.shields.io/pypi/v/bottle-mysql.svg)](https://pypi.python.org/pypi/bottle-mysql/)
+[![Downloads](https://img.shields.io/pypi/dm/bottle-mysql.svg)](https://pypi.python.org/pypi/bottle-mysql/)
 
 MySQL is the world's most used relational database management system (RDBMS) that runs
 as a server providing multi-user access to a number of databases.
