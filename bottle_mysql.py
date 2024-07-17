@@ -119,7 +119,7 @@ class MySQLPlugin(object):
 
         # Test if the original callback accepts a 'db' keyword.
         # Ignore it if it does not need a database handle.
-        _args = inspect.getargspec(_callback)
+        _args = inspect.getfullargspec(_callback)
         if keyword not in _args.args:
             return callback
 
